@@ -64,6 +64,14 @@ def main(args):
     source_shape = source_image.shape[1:]
     target_shape = target_image.shape[1:]
 
+    def fix_shape(x, y):
+        x = tf.ensure_shape(x, (None, 256, 256, 3))
+        y = tf.ensure_shape(y, (None, 256, 256, 3))
+        return x, y
+
+    train_dataset = train_dataset.map(fix_shape)
+    test_eataset = test_dataset.map(fix_shape)
+
     # Create model
     cut = CUT_model(source_shape, target_shape, cut_mode=args.mode, impl=args.impl)
 
@@ -98,7 +106,8 @@ def main(args):
 
     # Create checkpoint callback to save model's checkpoints every n epoch (default 5)
     # "period" to save every n epochs, "save_freq" to save every n batches
-    checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_dir+'/{epoch:03d}', period=args.save_n_epoch, verbose=1)
+    checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_dir+'/{epoch:03d}'+'.keras', save_freq=args.save_n_epoch, verbose=1)
+    # checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_dir+'/{epoch:03d}', period=args.save_n_epoch, verbose=1)
 
     # Create tensorboard callback to log losses every epoch
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)

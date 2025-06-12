@@ -3,3 +3,7 @@ _cudacache
 output
 weights
 archive
+datasets
+netg
+*.tflite
+.vscode

@@ -167,7 +167,7 @@ class CUT_model(Model):
         assert netF_units > 0
         assert netF_num_patches > 0
         assert impl in ['ref', 'cuda']
-        super(CUT_model, self).__init__(self, **kwargs)
+        super(CUT_model, self).__init__(**kwargs)
 
         self.gan_mode = gan_mode
         self.nce_temp = nce_temp
